@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
 import BookRow from "./BookRow";
 import { BookToRead } from "./BookToRead";
@@ -23,9 +23,22 @@ const customStyles = {
   }
 };
 
+const APP_KEY = "react-hooks-tutorial"
+
 const App = () => {
   const [books, setBooks] = useState([] as BookToRead[]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  useEffect(() => {
+    const storedBooks = localStorage.getItem(APP_KEY);
+    if (storedBooks) {
+      setBooks(JSON.parse(storedBooks));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem(APP_KEY, JSON.stringify(books));
+  }, [books])
 
   const handleBookDelete = (id: number) => {
     const newBooks = books.filter((book) => book.id !== id);
